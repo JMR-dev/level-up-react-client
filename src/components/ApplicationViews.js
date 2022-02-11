@@ -2,6 +2,8 @@ import React from "react"
 import { Route } from "react-router-dom"
 import { EventList } from "./game/EventList.js"
 import { GameList } from "./game/GameList.js"
+import { GameForm } from "./game/GameForm.js"
+import { EventForm } from "./game/EventForm.js"
 export const ApplicationViews = () => {
     return <>
         <main style={{

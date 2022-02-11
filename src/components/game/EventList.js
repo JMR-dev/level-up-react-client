@@ -8,8 +8,20 @@ export const EventList = (props) => {
         getEvents().then(data => setEvents(data))
     }, [])
 
-    return (
-        <article className="events">
+return (
+    <article className="events">
+        <button 
+            className="btn btn-2 btn-sep icon-create"
+    onClick={
+        () => {
+        history.push(
+            { pathname: "/events/new" }
+        )
+    }
+    
+}
+    >Register New Event
+</button>
             {
                 events.map(event => {
                     return <section key={`event--${event.id}`} className="event">
