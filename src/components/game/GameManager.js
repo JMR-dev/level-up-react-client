@@ -7,8 +7,8 @@ export const getGames = () => {
         .then(response => response.json())
 }
 
-export const getGamesById = () => {
-    return fetch(`http://localhost:8000/games/${games.id}`, {
+export const getGameById = (id) => {
+    return fetch(`http://localhost:8000/games/${id}`, {
         headers:{
             "Authorization": `Token ${localStorage.getItem("lu_token")}`
         }
