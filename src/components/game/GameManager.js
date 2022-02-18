@@ -33,3 +33,17 @@ export const getGameTypes = () => {
      })
         .then(response => response.json())
 }
+
+export const putGames = (editedGame) => {
+    return fetch(`http://localhost:8000/games/${editedGame.id}`, {
+        method: "PUT",
+        body: JSON.stringify(
+            editedGame 
+        ),
+        headers:{
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`,
+            "Content-Type": "Application/json"
+            }
+        }
+    )
+}

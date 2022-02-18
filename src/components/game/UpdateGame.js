@@ -1,16 +1,12 @@
 import react, { useState, useEffect, } from "react";
 import { useParams, useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { getEvents } from "./EventManager";
-import { putGames } from "./GameManager";
-import { getGames, getGameById } from "./GameManager";
+import { getGames, getGameById, getGameTypes, putGames } from "./GameManager";
 
 // getGames is imported to allow the select to display a list of games
 export const UpdateGame = (props) => {
   const [ gameList, setGameList] = useState([])
-  const [ eventList, setEventList] = useState([])
-  const [ gameToEdit, setGamegameToEdit ] = useState({})
-  
-
+  const [ gameToEdit, setGameToEdit ] = useState({})
+    const [gametypes, setGameTypes ] = useState([])
   let { id } = useParams()
   const history = useHistory()
 
@@ -19,10 +15,11 @@ export const UpdateGame = (props) => {
 
 useEffect(() => {
   getGames().then(data => setGameList(data))
-  getEvents().then(data => setEventList(data))
+  getGameTypes().then(data=> setGameTypes(data))
   getGameById(id).then(data => 
     {
-      setGamegameToEdit(data)
+    data.game_type = data.game_type.id
+      setGameToEdit(data)
       
     }
     )
@@ -35,75 +32,79 @@ useEffect(() => {
     const gameupdateform = () => {
         return(
             <>
-            <h2>Update Event</h2>
-            <form id="editeventform">
-            <label for="description">Event Description</label> 
-            <input type="text" id="description" value={gameToEdit.description} onChange=
+            <h2>Update Game</h2>
+            <form id="editgameform">
+            <label for="title">Game Title</label> 
+            <input type="textearea" id="title" value={gameToEdit.title} onChange=
             {
               (e)=>
               {
                 const copy = {...gameToEdit}
-                copy.description = e.target.value
+                copy.title = e.target.value
                 setGameToEdit(copy)
                 }
               }
-              >
+              />
 
-              </input>
-            <label for="games">Select Game</label>
-            <select name="games" form_id="editeventform"
-            /* Set game via parsing the gameId as the indicator to select the correct game for the event*/
+              
+            <label for="maker">Maker</label>
+           <input type="text" id="maker" value={gameToEdit.maker} onChange= {
+               (e)=> 
+               {
+                 const copy = {...gameToEdit}
+                 copy.maker = e.target.value
+                 setGameToEdit(copy)
+               }
+           } />
+            <label for="numberofplayers">Update number of players allowed</label>
+            <input type="number" id="numberofplayers" value={gameToEdit.number_of_players} 
             onChange={(e)=>
-              {
-                const copy = {...gameToEdit}
-                copy.game_id = e.target.value
-                setGameToEdit(copy)}
-              }>
-              <option disabled>Change Game from {gameToEdit.game?.title}</option>
-              
-              
-              
-              { gameList.map(
-                (gameList) => <option value={gameList.id}>{gameList.title}</option>
-              )
-            }
-            </select>
-            <label for="date">Updated Event Date</label>
-            <input type="date" id="eventdate" value={gameToEdit.date}
-            onChange={
-            (e)=> 
             {
               const copy = {...gameToEdit}
-              copy.date = e.target.value
-              setGameToEdit(copy)
-            }
-          }
-            >
-
-            </input>
-            <label for="time">Updated Event Time</label>
-            <input type="time" id="time" value={gameToEdit.time} onChange={(e)=>
-            {
-              const copy = {...gameToEdit}
-              copy.time = e.target.value
+              copy.number_of_players = e.target.value
               setGameToEdit(copy)}
             }
               
-            >
-            </input>
+            />
+            <label for="skillevel">Update required skill level</label>
+            <input type="number" id="skilllevel" value={gameToEdit.skill_level} 
+            onChange={(e)=>
+            {
+              const copy = {...gameToEdit}
+              copy.skill_level = e.target.value
+              setGameToEdit(copy)}
+            }
+              
+            />
+             <label for="gametype">Select Game</label>
+            <select name="gametype" form_id="editgameform"
+            /* Why is the nested information on game_type_id not returning from the API? What server side problem is causing this to be inaccessible?*/
+            onChange={(e)=>
+              {
+                const copy = {...gameToEdit}
+                copy.game_type = e.target.value
+                setGameToEdit(copy)}
+              }>
+              
+              { gametypes.map(
+                (gametypes) => <option value={gametypes.id} selected={gameToEdit.game_type === gametypes.id}>{gametypes.label}</option>
+              )
+            }
+            </select>
+        
             <input type="submit" 
             
             onClick={
               (e)=> 
               {
               e.preventDefault()
-              putEvents(gameToEdit)
+              putGames(gameToEdit)
               history.push("/")
               }
             }
-              >
+              />
 
-              </input>
+              
             </form>
         
             </>
